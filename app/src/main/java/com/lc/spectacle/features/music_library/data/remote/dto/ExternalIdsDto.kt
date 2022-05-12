@@ -1,0 +1,9 @@
+package com.lc.spectacle.features.music_library.data.remote.dto
+
+
+import com.google.gson.annotations.SerializedName
+
+data class ExternalIds(
+    @SerializedName("isrc")
+    val isrc: String
+)

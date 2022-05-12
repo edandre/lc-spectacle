@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "260800559459",
+    "project_id": "lc-spectacle",
+    "storage_bucket": "lc-spectacle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260800559459:android:1d63546ab01971c29e7b56",
+        "android_client_info": {
+          "package_name": "com.lc.spectacle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "260800559459-002m2p4bnd48gcffviv6otctsif3mkda.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqSGaDHDv6wCr3SsSpR4Ezgdph-EyDK_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "260800559459-002m2p4bnd48gcffviv6otctsif3mkda.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
