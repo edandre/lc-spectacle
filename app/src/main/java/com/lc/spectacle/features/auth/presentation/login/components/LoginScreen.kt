@@ -1,16 +1,16 @@
-package com.lc.spectacle.features.auth.presentation.register.components
+package com.lc.spectacle.features.auth.presentation.login.components
 
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
@@ -25,52 +25,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.lc.spectacle.R
-import com.lc.spectacle.features.auth.presentation.register.RegisterViewModel
+import com.lc.spectacle.features.auth.presentation.Screen
+import com.lc.spectacle.features.auth.presentation.login.LoginViewModel
 import com.lc.spectacle.ui.theme.SpectacleTheme
-import java.time.Duration
 import java.util.*
 
 @Preview
 @Composable
-fun RegisterScreen(
+fun LoginScreen(
     navController: NavController,
-    registerViewModel: RegisterViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
-    val state = registerViewModel.state.value
+    val state = loginViewModel.state.value
     val pageScrollState = rememberScrollState()
 
     Scaffold(
         backgroundColor = MaterialTheme.colors.primary,
         topBar = {
-            TopAppBar (
-                navigationIcon = if (navController.previousBackStackEntry != null) {
-                    {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    }
-                } else {
-                    null
-                },
+            TopAppBar(
                 backgroundColor = MaterialTheme.colors.primary,
                 elevation = 0.dp,
                 title = {
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(end = 36.dp),
+                            .fillMaxHeight(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
@@ -85,7 +75,7 @@ fun RegisterScreen(
             )
         },
         content = { padding ->
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
@@ -98,7 +88,7 @@ fun RegisterScreen(
                         )
                     )
             ) {
-                Column (
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxSize()
@@ -111,19 +101,17 @@ fun RegisterScreen(
                 ) {
                     Title()
                     Email(setEmail = {
-                        registerViewModel.email = it
+                        loginViewModel.email = it
                     })
                     Password(setPassword = {
-                        registerViewModel.password = it
+                        loginViewModel.password = it
                     })
-                    ConfirmPassword(setConfirmationPassword = {
-                        registerViewModel.passwordMatch = it
-                    })
+                    Register(navController)
                     if (state.isLoading) {
-                        LoadingRegisterButton()
+                        LoadingSignInButton()
                     } else {
-                        Register(onClick = {
-                            registerViewModel.register()
+                        SignIn(onClick = {
+                            loginViewModel.login()
                         })
                     }
                 }
@@ -138,7 +126,7 @@ fun RegisterScreen(
 
 @Composable fun Title() {
     Text (
-        text = stringResource(id = R.string.register_screen_title),
+        text = stringResource(id = R.string.welcome_to_app),
         Modifier.padding(vertical = 4.dp),
         color = Color.White
     )
@@ -236,62 +224,21 @@ fun RegisterScreen(
     )
 }
 
-@Composable fun ConfirmPassword(setConfirmationPassword: (updatedPassword: String) -> Unit) {
-    val focusManager = LocalFocusManager.current
-    val pwdState = remember { mutableStateOf(TextFieldValue()) }
-    val showPassword = remember { mutableStateOf(false) }
-
-    TextField(
+@Composable fun Register(navController: NavController) {
+    ClickableText(
         modifier = Modifier
-            .fillMaxWidth()
-            .alpha(0.65f)
-            .padding(vertical = 4.dp),
-        value = pwdState.value,
-        maxLines = 1,
-        onValueChange = {
-            pwdState.value = it
-            setConfirmationPassword(it.text)
+            .padding(vertical= 8.dp),
+        text = AnnotatedString(stringResource(id = R.string.register_text)),
+        style = TextStyle(
+            color = Color.LightGray
+        ),
+        onClick = {
+            navController.navigate(Screen.RegisterScreen.route)
         },
-        label = { Text( text = stringResource(R.string.confirm_password_hint)) },
-        colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = MaterialTheme.colors.secondary,
-            unfocusedIndicatorColor = Color.Transparent,
-            textColor = Color.White,
-            focusedLabelColor = Color.White,
-            cursorColor = MaterialTheme.colors.secondaryVariant
-        ),
-        shape = RoundedCornerShape(16.dp),
-        visualTransformation = if (showPassword.value) { VisualTransformation.None } else {PasswordVisualTransformation()},
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                focusManager.clearFocus(true)
-            }
-        ),
-        trailingIcon = {
-            if (showPassword.value) {
-                IconButton(onClick = {showPassword.value = false}) {
-                    Icon(
-                        imageVector = Icons.Filled.Visibility,
-                        ""
-                    )
-                }
-            } else {
-                IconButton(onClick = {showPassword.value = true}) {
-                    Icon(
-                        imageVector = Icons.Filled.VisibilityOff,
-                        ""
-                    )
-                }
-            }
-        }
     )
 }
 
-@Composable fun Register(onClick: () -> Unit) {
+@Composable fun SignIn(onClick: () -> Unit) {
     Button (
         onClick = onClick,
         modifier = Modifier
@@ -300,13 +247,13 @@ fun RegisterScreen(
             .fillMaxWidth()
             .padding(vertical = 4.dp)
     ) {
-        Text ( text = stringResource(id = R.string.register_button_text) )
+        Text ( text = stringResource(id = R.string.sign_in_button_text) )
     }
 }
 
-@Composable fun LoadingRegisterButton() {
+@Composable fun LoadingSignInButton() {
     Button (
-        onClick = {},
+        onClick = { },
         modifier = Modifier
             .height(60.dp)
             .alpha(0.75f)

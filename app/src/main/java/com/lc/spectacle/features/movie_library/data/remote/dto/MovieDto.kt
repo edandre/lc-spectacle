@@ -1,8 +1,8 @@
 package com.lc.spectacle.features.movie_library.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.lc.spectacle.features.movie_library.util.Constants
-import com.lc.spectacle.features.movie_library.domain.model.Genre
+import com.lc.spectacle.core.Constants
+import com.lc.spectacle.features.movie_library.data.repository.MoviesRepositoryImpl
 import com.lc.spectacle.features.movie_library.domain.model.Movie
 
 data class MovieDto(
@@ -32,7 +32,7 @@ data class MovieDto(
 fun MovieDto.toMovie() : Movie {
     return Movie(
         movieId = id,
-        genre = Genre(genreId = 0, genreName = ""), //TODO: USING DI, TURN GENRES ACCESSIBLE ON ITS REPOSITORY AND THEN FILTER BY THE FIRST GENRE ID
+        genres = genreIds.map { genreId -> MoviesRepositoryImpl.genres?.find { it.id == genreId }?.name ?: "" },
         overview = overview,
         posterUrl = "${Constants.MoviesApiImagesRepositoryBaseUrl}$posterPath",
         title = title,

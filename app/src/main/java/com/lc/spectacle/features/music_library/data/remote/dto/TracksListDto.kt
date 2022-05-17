@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class TracksListDto(
     @SerializedName("tracks")
-    val tracks: Tracks
+    val tracks: TracksDto
 )

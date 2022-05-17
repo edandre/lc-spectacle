@@ -1,4 +1,7 @@
 package com.lc.spectacle.features.auth.presentation.register
 
-class RegisterState {
-}
+data class RegisterState (
+    var isLoading: Boolean = false,
+    var successfullyRegistered: Boolean = false,
+    var error: String = ""
+)

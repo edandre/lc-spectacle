@@ -3,41 +3,40 @@ package com.lc.spectacle
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.lc.spectacle.features.auth.presentation.Screen
+import com.lc.spectacle.features.auth.presentation.login.components.LoginScreen
+import com.lc.spectacle.features.auth.presentation.register.components.RegisterScreen
 import com.lc.spectacle.ui.theme.SpectacleTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             SpectacleTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.LoginScreen.route
                 ) {
-                    Greeting("Android")
+                    composable(
+                        route = Screen.LoginScreen.route,
+                    ) {
+                        LoginScreen(navController)
+                    }
+
+                    composable(
+                        route = Screen.RegisterScreen.route,
+                    ) {
+                        RegisterScreen(navController)
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    SpectacleTheme {
-        Greeting("Android")
     }
 }

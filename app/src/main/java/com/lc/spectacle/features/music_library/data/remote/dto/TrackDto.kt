@@ -2,12 +2,13 @@ package com.lc.spectacle.features.music_library.data.remote.dto
 
 
 import com.google.gson.annotations.SerializedName
+import com.lc.spectacle.features.music_library.domain.model.Track
 
-data class Item(
+data class TrackDto(
     @SerializedName("album")
-    val album: Album,
+    val albumDto: AlbumDto,
     @SerializedName("artists")
-    val artists: List<ArtistX>,
+    val artists: List<ArtistDto>,
     @SerializedName("available_markets")
     val availableMarkets: List<String>,
     @SerializedName("disc_number")
@@ -17,9 +18,9 @@ data class Item(
     @SerializedName("explicit")
     val explicit: Boolean,
     @SerializedName("external_ids")
-    val externalIds: ExternalIds,
+    val externalIds: ExternalIdsDto,
     @SerializedName("external_urls")
-    val externalUrls: ExternalUrlsXXX,
+    val externalUrls: ExternalUrlsDto,
     @SerializedName("href")
     val href: String,
     @SerializedName("id")
@@ -39,3 +40,14 @@ data class Item(
     @SerializedName("uri")
     val uri: String
 )
+
+fun TrackDto.toTrack(): Track {
+    return Track(
+        id = id,
+        name = name,
+        album = albumDto.toAlbum(),
+        artists = artists.map { it.toArtist() },
+        explicit = explicit,
+        spotifyUrl = externalUrls.spotify
+    )
+}

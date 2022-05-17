@@ -2,10 +2,11 @@ package com.lc.spectacle.features.music_library.data.remote.dto
 
 
 import com.google.gson.annotations.SerializedName
+import com.lc.spectacle.features.music_library.domain.model.Artist
 
-data class Artist(
+data class ArtistDto(
     @SerializedName("external_urls")
-    val externalUrls: ExternalUrls,
+    val externalUrls: ExternalUrlsDto,
     @SerializedName("href")
     val href: String,
     @SerializedName("id")
@@ -17,3 +18,10 @@ data class Artist(
     @SerializedName("uri")
     val uri: String
 )
+
+fun ArtistDto.toArtist() : Artist {
+    return Artist(
+        id = id,
+        name = name
+    )
+}

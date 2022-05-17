@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Spectacle</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="app_title">Spectacle</string>
+    <string name="welcome_to_app">Bem-vindo(a), faça login para continuar.</string>
+    <string name="sign_in_button_text">ENTRAR</string>
+    <string name="register_text">Não tem uma conta? Registre-se.</string>
+    <string name="email_hint">E-mail</string>
+    <string name="password_hint">Senha</string>
+    <string name="confirm_password_hint">Confirme sua senha</string>
+    <string name="register_button_text">REGISTRAR</string>
+    <string name="register_screen_title">Crie uma conta para continuar</string>
+    <string name="something_gone_wrong">Opa, algo deu errado :/</string>
 </resources>

@@ -4,7 +4,7 @@ data class Movie (
     val movieId: Int,
     val title: String,
     val posterUrl: String,
-    val genre: Genre,
+    val genres: List<String>,
     val voteAverage: Double,
     val voteCount: Int,
     val overview: String
