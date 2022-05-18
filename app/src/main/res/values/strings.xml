@@ -11,4 +11,10 @@
     <string name="register_button_text">REGISTRAR</string>
     <string name="register_screen_title">Crie uma conta para continuar</string>
     <string name="something_gone_wrong">Opa, algo deu errado :/</string>
+    <string name="music_label_1st">Música</string>
+    <string name="music_label_2nd">Veja suas músicas disponíveis</string>
+    <string name="movies_label_1st">Filmes</string>
+    <string name="movies_label_2nd">Veja seus filmes disponíveis</string>
+    <string name="movies_search_text_field_label">Procurar em Meus Filmes...</string>
+    <string name="music_search_text_field_label">Procurar em Minhas Músicas</string>
 </resources>

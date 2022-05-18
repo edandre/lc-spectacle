@@ -2,7 +2,10 @@ package com.lc.spectacle.features.auth.presentation.register
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.lc.spectacle.core.commons.Event
 import com.lc.spectacle.core.commons.Extensions.isValidEmail
 import com.lc.spectacle.core.commons.Resource
 import com.lc.spectacle.features.auth.data.remote.dto.UserDto
@@ -20,9 +23,14 @@ class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase
     //private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    /*private val _errorMessage = MutableLiveData<Event<String>>()
+    val errorMessage : LiveData<Event<String>>
+        get() = _errorMessage*/
+
+    private val _state = MutableLiveData<Event<RegisterState>>()
+    val state: LiveData<Event<RegisterState>> get() = _state
+
     private val baseCoroutineScopeMain = CoroutineScope(Dispatchers.Main.immediate)
-    private val _state = mutableStateOf(RegisterState())
-    val state: State<RegisterState> = _state
     var email: String = ""
     var password: String = ""
     var passwordMatch: String = ""
@@ -46,20 +54,22 @@ class RegisterViewModel @Inject constructor(
     fun register() {
         baseCoroutineScopeMain.launch {
             if (!passwordsMatch()) {
-                _state.value = RegisterState(
+                _state.value = Event(RegisterState(
                     isLoading = false,
                     successfullyRegistered = false,
                     error = "Senhas não conferem"
-                )
+                ))
+
                 return@launch
             }
 
             if (!userIsValid()) {
-                _state.value = RegisterState(
+                _state.value = Event(RegisterState(
                     isLoading = false,
                     successfullyRegistered = false,
                     error = "Dados inválidos"
-                )
+                ))
+
                 return@launch
             }
 
@@ -70,25 +80,25 @@ class RegisterViewModel @Inject constructor(
             )).onEach { result ->
                 when(result) {
                     is Resource.Success -> {
-                        _state.value = RegisterState(
+                        _state.value = Event(RegisterState(
                             isLoading = false,
                             successfullyRegistered = true,
                             error = ""
-                        )
+                        ))
                     }
                     is Resource.Error -> {
-                        _state.value = RegisterState(
+                        _state.value = Event(RegisterState(
                             isLoading = false,
                             successfullyRegistered = false,
                             error = result.message ?: "Opa, algo saiu errado :/"
-                        )
+                        ))
                     }
                     is Resource.Loading -> {
-                        _state.value = RegisterState(
+                        _state.value = Event(RegisterState(
                             isLoading = true,
                             successfullyRegistered = false,
                             error = ""
-                        )
+                        ))
                     }
                 }
             }.launchIn(this)

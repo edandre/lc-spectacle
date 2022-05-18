@@ -33,21 +33,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.lc.spectacle.R
-import com.lc.spectacle.features.auth.presentation.Screen
+import com.lc.spectacle.core.ui.navigation.Screen
 import com.lc.spectacle.features.auth.presentation.login.LoginViewModel
-import com.lc.spectacle.ui.theme.SpectacleTheme
-import java.util.*
+import java.util.Locale
 
 @Preview
 @Composable
 fun LoginScreen(
+    lifecycleOwner: LifecycleOwner,
     navController: NavController,
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
-    val state = loginViewModel.state.value
+    val context = LocalContext.current
+    var loading = false
+
+    loginViewModel.state.observe(lifecycleOwner, Observer {
+        it.getContentIfNotHandled()?.let { state ->
+            if (state.error.isNotEmpty()) {
+                Toast.makeText(context, state.error, Toast.LENGTH_LONG).show()
+
+                return@Observer
+            }
+
+            loading = state.isLoading
+
+            if (state.successfullyLoggedIn) {
+                navController.navigate(Screen.HomeScreen.route)
+            }
+        }
+    })
+
     val pageScrollState = rememberScrollState()
 
     Scaffold(
@@ -94,9 +113,9 @@ fun LoginScreen(
                         .fillMaxSize()
                         .verticalScroll(pageScrollState)
                         .padding(horizontal = 16.dp)
-                        .padding(bottom = 32.dp)
+                        .padding(top = 164.dp)
                         .background(Color.Transparent),
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     Alignment.CenterHorizontally,
                 ) {
                     Title()
@@ -107,7 +126,7 @@ fun LoginScreen(
                         loginViewModel.password = it
                     })
                     Register(navController)
-                    if (state.isLoading) {
+                    if (loading) {
                         LoadingSignInButton()
                     } else {
                         SignIn(onClick = {
@@ -118,16 +137,11 @@ fun LoginScreen(
             }
         }
     )
-
-    if (!state.error.isNullOrEmpty()) {
-        Toast.makeText(LocalContext.current, state.error, Toast.LENGTH_LONG).show()
-    }
 }
 
 @Composable fun Title() {
     Text (
         text = stringResource(id = R.string.welcome_to_app),
-        Modifier.padding(vertical = 4.dp),
         color = Color.White
     )
 }
@@ -139,8 +153,7 @@ fun LoginScreen(
     TextField(
         modifier = Modifier
             .fillMaxWidth()
-            .alpha(0.65f)
-            .padding(vertical = 4.dp),
+            .alpha(0.65f),
         value = emailState.value,
         onValueChange = {
             emailState.value = it
@@ -148,7 +161,7 @@ fun LoginScreen(
         },
         label = { Text( text = stringResource(R.string.email_hint)) },
         colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = MaterialTheme.colors.secondary,
+            focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             textColor = Color.White,
             focusedLabelColor = Color.White,
@@ -177,8 +190,7 @@ fun LoginScreen(
     TextField(
         modifier = Modifier
             .fillMaxWidth()
-            .alpha(0.65f)
-            .padding(vertical = 4.dp),
+            .alpha(0.65f),
         value = pwdState.value,
         maxLines = 1,
         onValueChange = {
@@ -187,7 +199,7 @@ fun LoginScreen(
         },
         label = { Text( text = stringResource(R.string.password_hint)) },
         colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = MaterialTheme.colors.secondary,
+            focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             textColor = Color.White,
             focusedLabelColor = Color.White,
@@ -227,10 +239,10 @@ fun LoginScreen(
 @Composable fun Register(navController: NavController) {
     ClickableText(
         modifier = Modifier
-            .padding(vertical= 8.dp),
+            .padding(vertical= 4.dp),
         text = AnnotatedString(stringResource(id = R.string.register_text)),
         style = TextStyle(
-            color = Color.LightGray
+            color = Color.White
         ),
         onClick = {
             navController.navigate(Screen.RegisterScreen.route)
@@ -242,12 +254,22 @@ fun LoginScreen(
     Button (
         onClick = onClick,
         modifier = Modifier
-            .height(60.dp)
+            .height(48.dp)
             .alpha(0.75f)
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.secondaryVariant,
+            contentColor = Color.White
+        )
     ) {
-        Text ( text = stringResource(id = R.string.sign_in_button_text) )
+        Text (
+            text = stringResource(id = R.string.sign_in_button_text),
+            style = TextStyle(
+                Color.White,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 18.sp
+            )
+        )
     }
 }
 
@@ -255,11 +277,17 @@ fun LoginScreen(
     Button (
         onClick = { },
         modifier = Modifier
-            .height(60.dp)
+            .height(48.dp)
             .alpha(0.75f)
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.secondaryVariant,
+            contentColor = Color.White
+        )
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(
+            color = Color.White
+        )
     }
 }
