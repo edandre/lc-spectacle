@@ -17,4 +17,5 @@
     <string name="movies_label_2nd">Veja seus filmes disponíveis</string>
     <string name="movies_search_text_field_label">Procurar em Meus Filmes...</string>
     <string name="music_search_text_field_label">Procurar em Minhas Músicas</string>
+    <string name="my_movies_label">Meus Filmes</string>
 </resources>

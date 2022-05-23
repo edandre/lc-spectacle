@@ -81,7 +81,7 @@ fun FeatureSelectionPanel(
                     }
                     .align(Alignment.CenterVertically)
             )
-            Spacer(modifier = Modifier.width(24.dp))
+            Spacer(modifier = Modifier.width(18.dp))
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -95,7 +95,7 @@ fun FeatureSelectionPanel(
                         color = Color.DarkGray
                     ),
                     modifier = Modifier
-                        .padding(top = 16.dp)
+                        .padding(top = 8.dp)
                 )
                 Text(
                     text = FeatureTexts[feature]?.let { stringResource(id = it.second) } ?: "Feature Not Found",

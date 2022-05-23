@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity(), LifecycleObserver {
                     composable(
                         route = Screen.MoviesScreen.route,
                     ) {
-                        MoviesScreen(navController)
+                        MoviesScreen()
                     }
                 }
             }
