@@ -122,7 +122,7 @@ fun MoviesScreen(
         onClick = {},
         modifier = Modifier
             .height(150.dp)
-            .width(130.dp)
+            .width(140.dp)
             .padding(start = 24.dp, top = 16.dp, end = 16.dp)
             .graphicsLayer(alpha = 0.90f)
             .clip(RoundedCornerShape(8.dp)),

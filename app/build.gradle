@@ -83,6 +83,7 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
     implementation 'androidx.activity:activity-compose:1.4.0'
+    implementation "io.coil-kt:coil-compose:$compose_coil_version"
 
     //Dagger Hilt
     implementation "com.google.dagger:hilt-android:$dagger_hilt_version"
